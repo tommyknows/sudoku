@@ -1,3 +1,5 @@
+// package sudoku solves sudoku puzzles through constraint proppagation and
+// search. it is based on the article here: https://norvig.com/sudoku.html
 package sudoku
 
 import (
@@ -129,7 +131,7 @@ func (s *Sudoku) constraintPropagation() error {
 	toSolve := s.grid
 	s.grid = make(grid)
 	for _, field := range s.fields {
-		s.grid[field] = value(digits)
+		s.grid[field] = digits
 	}
 
 	for idx, value := range toSolve {
@@ -170,7 +172,7 @@ func (s *Sudoku) minimumValues() index {
 func (s *Sudoku) try(val value, idx index) (*Sudoku, error) {
 	// create a copy as we are guessing
 	sc := s.copy()
-	err := sc.assign(value(val), idx)
+	err := sc.assign(val, idx)
 	if err != nil {
 		return nil, err
 	}
@@ -206,10 +208,10 @@ func (s *Sudoku) removeAt(val value, idx index) error {
 	s.grid[idx] = s.grid[idx].remove(val)
 	switch len(s.grid[idx]) {
 	case 0:
-		return fmt.Errorf("Removed last value from field %v", idx)
+		return fmt.Errorf("removed last value from field %v", idx)
 	case 1:
 		// if a field is reduced to one value, eliminate that value from the peers
-		if err := s.removeFromPeers(idx, s.grid[idx]); err != nil {
+		if err := s.removeFromPeers(idx); err != nil {
 			return err
 		}
 	}
@@ -230,9 +232,10 @@ func (s *Sudoku) removeAt(val value, idx index) error {
 }
 
 // removes the given value from all peers of idx
-func (s *Sudoku) removeFromPeers(idx index, val value) error {
+func (s *Sudoku) removeFromPeers(idx index) error {
+	val := s.grid[idx]
 	for _, peer := range s.peers[idx] {
-		if err := s.removeAt(s.grid[idx], peer); err != nil {
+		if err := s.removeAt(val, peer); err != nil {
 			return err
 		}
 	}
