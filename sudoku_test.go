@@ -20,15 +20,17 @@ func TestRemove(t *testing.T) {
 }
 
 func TestSolve(t *testing.T) {
-	s := New()
-	solved := s.Solve("003020600900305001001806400008102900700000008006708200002609500800203009005010300")
-	if !solved {
+	s := New("003020600900305001001806400008102900700000008006708200002609500800203009005010300")
+	t.Log(s)
+	err := s.Solve()
+	if err != nil {
 		t.Errorf("Could not solve sudoku: %v", s)
 	}
 	t.Log(s)
-	s = New()
-	solved = s.Solve("4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......")
-	if !solved {
+	s = New("4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......")
+	t.Log(s)
+	err = s.Solve()
+	if err != nil {
 		t.Errorf("Could not solve sudoku: %v", s)
 	}
 	t.Log(s)
@@ -40,8 +42,11 @@ func TestSearch(t *testing.T) {
 		res := testing.Benchmark(func(b *testing.B) {
 			//b.Run(fmt.Sprintf("sudoku %v", i), func(b *testing.B) {
 			for n := 0; n < b.N; n++ {
-				su := New()
-				su.Solve(s)
+				su := New(s)
+				err := su.Solve()
+				if err != nil {
+					b.Error(err)
+				}
 			}
 		})
 		fmt.Printf("Mean Time for Sudoku %v: %v\n", i, time.Duration(res.NsPerOp()))

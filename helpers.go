@@ -33,3 +33,15 @@ func contains(ls []index, s index) bool {
 	}
 	return false
 }
+
+func cross(a, b index) []index {
+	i := make([]index, len(a)*len(b))
+	idx := 0
+	for _, sa := range a {
+		for _, sb := range b {
+			i[idx] = index(sa) + index(sb)
+			idx++
+		}
+	}
+	return i
+}
