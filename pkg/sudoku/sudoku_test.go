@@ -1,6 +1,7 @@
 package sudoku
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/matryer/is"
@@ -30,4 +31,16 @@ func TestSolve(t *testing.T) {
 		t.Errorf("Could not solve sudoku: %v", s)
 	}
 	t.Log(s)
+}
+
+// This is how godoc parsed ExampleExamples_output() that was shown above.
+func ExampleSudoku() {
+	s := New("003020600900305001001806400008102900700000008006708200002609500800203009005010300")
+	// show the parsed sudoku
+	fmt.Print(s)
+	err := s.Solve()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Print(s)
 }

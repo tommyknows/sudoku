@@ -46,7 +46,9 @@ type Sudoku struct {
 	fields []index
 }
 
-// New initialises a new sudoku
+// New initialises a new sudoku, parsing the given fields. empty fields
+// should be indicated with either '0' or '.'. All other characters
+// will be ignored (apart from actual digits).
 func New(fields string) *Sudoku {
 	s := Sudoku{
 		fields: cross(index("ABCDEFGHI"), index("123456789")),
