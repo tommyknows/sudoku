@@ -261,17 +261,24 @@ func (s *Sudoku) singlePossibility(val value, unit []index) (found bool, field i
 	return found, field
 }
 
+func (v value) validCharacter() bool {
+	return digits.contains(v) || v.isZero()
+}
+
 // grid sets the grid by parsing the sudoku from a string. the
 // string should have either 0s or '.' for empty fields, everything
 // else gets ignored
 func (s *Sudoku) parse(fields string) {
 	s.grid = make(map[index]value)
-	for i, field := range s.fields {
-		val := value(fields[i])
-		if !digits.contains(val) && !val.isZero() {
+	i := 0
+	for _, v := range fields {
+		val := value(v)
+		if !val.validCharacter() {
+			fmt.Println(val, "is not valid")
 			continue
 		}
-		s.grid[field] = val
+		s.grid[s.fields[i]] = val
+		i++
 	}
 }
 
