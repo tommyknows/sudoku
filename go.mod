@@ -1,4 +1,4 @@
-module sudoku
+module github.com/tommyknows/sudoku
 
 go 1.12
 
