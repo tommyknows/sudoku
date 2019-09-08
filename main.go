@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -10,9 +11,27 @@ import (
 	"github.com/tommyknows/sudoku/pkg/sudoku"
 )
 
-func BenchmarkSolve() {
-	sudokus := readSudokusFromFile("sudokus.txt")
-	for i, s := range sudokus {
+func main() {
+	fromInput := flag.String("i", "", "input for the sudoku-solver")
+	runBenchmark := flag.Bool("bench", true, "run benchmarks on a sudoku (or the default sudoku if i is not specified)")
+	flag.Parse()
+
+	var sudokus []string
+	if *fromInput != "" {
+		sudokus = append(sudokus, *fromInput)
+	} else {
+		sudokus = readSudokusFromFile("sudokus.txt")
+	}
+
+	f := solve
+	if *runBenchmark {
+		f = benchmark
+	}
+	f(sudokus)
+}
+
+func benchmark(sudokus []string) {
+	for _, s := range sudokus {
 		var su *sudoku.Sudoku
 		res := testing.Benchmark(func(b *testing.B) {
 			for n := 0; n < b.N; n++ {
@@ -24,12 +43,19 @@ func BenchmarkSolve() {
 			}
 		})
 		fmt.Println(su)
-		fmt.Printf("Mean Time for Sudoku %v: %v\n", i, time.Duration(res.NsPerOp()))
+		fmt.Printf("Mean Time for Sudoku: %v\n", time.Duration(res.NsPerOp()))
 	}
 }
 
-func main() {
-	BenchmarkSolve()
+func solve(sudokus []string) {
+	for _, s := range sudokus {
+		su := sudoku.New(s)
+		if err := su.Solve(); err != nil {
+			fmt.Printf("ERROR: %v\n", err)
+			continue
+		}
+		fmt.Println(su)
+	}
 }
 
 func readSudokusFromFile(filename string) []string {

@@ -100,8 +100,7 @@ func (s *Sudoku) String() string {
 
 // Solve a sudoku by constraint propagation and search, if necessary
 func (s *Sudoku) Solve() error {
-	err := s.constraintPropagation()
-	if err != nil {
+	if err := s.constraintPropagation(); err != nil {
 		return err
 	}
 	if s.grid.solved() {
@@ -141,8 +140,7 @@ func (s *Sudoku) constraintPropagation() error {
 		if !digits.contains(value) {
 			continue
 		}
-		err := s.assign(value, idx)
-		if err != nil {
+		if err := s.assign(value, idx); err != nil {
 			return err
 		}
 	}
@@ -174,14 +172,12 @@ func (s *Sudoku) minimumValues() index {
 func (s *Sudoku) try(val value, idx index) (*Sudoku, error) {
 	// create a copy as we are guessing
 	sc := s.copy()
-	err := sc.assign(val, idx)
-	if err != nil {
+	if err := sc.assign(val, idx); err != nil {
 		return nil, err
 	}
 	if !sc.grid.solved() {
 		// take another guess
-		err = sc.search()
-		if err != nil {
+		if err := sc.search(); err != nil {
 			return nil, err
 		}
 	}
