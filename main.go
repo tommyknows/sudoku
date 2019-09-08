@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strings"
-	"sudoku/pkg/sudoku"
 	"testing"
 	"time"
+
+	"github.com/tommyknows/sudoku/pkg/sudoku"
 )
 
 func BenchmarkSolve() {
