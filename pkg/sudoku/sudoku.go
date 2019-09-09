@@ -270,7 +270,6 @@ func (s *Sudoku) parse(fields string) {
 	for _, v := range fields {
 		val := value(v)
 		if !val.validCharacter() {
-			fmt.Println(val, "is not valid")
 			continue
 		}
 		s.grid[s.fields[i]] = val

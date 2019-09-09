@@ -50,6 +50,7 @@ func benchmark(sudokus []string) {
 func solve(sudokus []string) {
 	for _, s := range sudokus {
 		su := sudoku.New(s)
+		fmt.Println(su)
 		if err := su.Solve(); err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 			continue
