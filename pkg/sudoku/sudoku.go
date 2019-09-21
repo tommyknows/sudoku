@@ -18,7 +18,8 @@ type index string
 type value string
 
 // some simple helper functions that handle the conversions
-func (v value) remove(val value) value  { return value(strings.ReplaceAll(string(v), string(val), "")) }
+// use replace instead of replaceAll for Go 1.11 compatibility
+func (v value) remove(val value) value  { return value(strings.Replace(string(v), string(val), "", -1)) }
 func (v value) contains(val value) bool { return strings.Contains(string(v), string(val)) }
 func (v value) isZero() bool            { return v == "." || v == "0" }
 
